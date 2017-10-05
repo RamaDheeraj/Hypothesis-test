@@ -1,0 +1,28 @@
+#Hypothesizing the 75% of GMAT score as 600
+GMAT = admission$GMAT
+
+# 75th percentile = 600
+
+qnorm(mean = 532.5,sd = 100,p = 0.75)
+
+# test statistic
+tstat= quantile(GMAT,probs = 0.75)
+
+# draw a sample and compute the statistic
+f1 = function()
+{
+  x= rnorm(n = length(GMAT),mean = 532.5,sd = 100)
+  return(quantile(x,probs = 0.75))
+}
+
+# Create the sampling distribution
+sdist=replicate(10000,f1())
+
+# draw and evaluate the hyopthesis
+plot(density(sdist))
+abline(v=tstat,col="red")
+gap = abs(mean(sdist)-tstat)
+s1 = sdist[sdist<mean(sdist)-gap|sdist>mean(sdist)+gap]
+pvalue = length(s1)/length(sdist)
+pvalue
+#p-value =0. Hence null hypothesis is rejeced.
